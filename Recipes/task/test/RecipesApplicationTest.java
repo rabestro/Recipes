@@ -93,8 +93,8 @@ public class RecipesApplicationTest extends SpringTest {
                     new String[]{}
             )
     };
-    final String[] JSON_RECIPES = toJson(RECIPES);
-    final String[] JSON_INCORRECT_RECIPES = toJson(INCORRECT_RECIPES);
+    // recipes ids will be saved when testing POST requests and used later to test GET/DELETE requests
+    final List<Integer> recipeIds = new ArrayList<>();
     @DynamicTest
     DynamicTesting[] dt = new DynamicTesting[]{
             () -> testPostRecipe(JSON_RECIPES[0]),
@@ -120,8 +120,10 @@ public class RecipesApplicationTest extends SpringTest {
             () -> testPostIncorrectRecipeStatusCode(JSON_INCORRECT_RECIPES[6]),
             () -> testPostIncorrectRecipeStatusCode(JSON_INCORRECT_RECIPES[7])
     };
-    // recipes ids will be saved when testing POST requests and used later to test GET/DELETE requests
-    final List<Integer> recipeIds = new ArrayList<>();
+
+
+    final String[] JSON_RECIPES = toJson(RECIPES);
+    final String[] JSON_INCORRECT_RECIPES = toJson(INCORRECT_RECIPES);
 
     final String API_RECIPE_NEW = "/api/recipe/new";
     final String API_RECIPE = "/api/recipe/";
@@ -196,6 +198,20 @@ public class RecipesApplicationTest extends SpringTest {
         return correct();
     }
 
+    static class Recipe {
+        final String name;
+        final String description;
+        final String[] ingredients;
+        final String[] directions;
+
+        Recipe(String name, String description, String[] ingredients, String[] directions) {
+            this.name = name;
+            this.description = description;
+            this.ingredients = ingredients;
+            this.directions = directions;
+        }
+    }
+
     CheckResult testDeleteRecipe(int recipeId) {
         HttpResponse response = delete(API_RECIPE + recipeId).send();
 
@@ -226,19 +242,5 @@ public class RecipesApplicationTest extends SpringTest {
         throwIfIncorrectStatusCode(response, 400);
 
         return correct();
-    }
-
-    static class Recipe {
-        final String name;
-        final String description;
-        final String[] ingredients;
-        final String[] directions;
-
-        Recipe(String name, String description, String[] ingredients, String[] directions) {
-            this.name = name;
-            this.description = description;
-            this.ingredients = ingredients;
-            this.directions = directions;
-        }
     }
 }
