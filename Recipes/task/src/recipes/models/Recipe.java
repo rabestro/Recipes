@@ -1,8 +1,10 @@
 package recipes.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -10,11 +12,13 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Objects;
 
-@Data
-@Entity
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
-@AllArgsConstructor
+@Entity
 @Table(name = "RECIPES")
 public class Recipe {
     @Id
@@ -43,4 +47,17 @@ public class Recipe {
     @Size(min = 1)
     @ElementCollection
     private List<String> directions;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Recipe recipe = (Recipe) o;
+        return id != null && Objects.equals(id, recipe.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
