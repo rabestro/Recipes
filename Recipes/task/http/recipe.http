@@ -23,3 +23,5 @@ GET {{host}}/api/recipe/1
 ### Delete a recipe
 DELETE {{host}}/api/recipe/1
 
+###
+POST {{host}}/actuator/shutdown

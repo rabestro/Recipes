@@ -6,11 +6,12 @@ import org.springframework.web.server.ResponseStatusException;
 import recipes.models.Recipe;
 import recipes.service.RecipesService;
 
+import javax.validation.Valid;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/recipe")
+@RequestMapping("/api/recipe")
 public class RecipesController {
     private final RecipesService recipesService;
 
@@ -20,7 +21,7 @@ public class RecipesController {
 
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.OK)
-    public Map<String, Long> create(@RequestBody final Recipe recipe) {
+    public Map<String, Long> create(@Valid @RequestBody final Recipe recipe) {
         recipesService.createRecipe(recipe);
         return Map.of("id", recipesService.createRecipe(recipe).getId());
     }
@@ -32,6 +33,7 @@ public class RecipesController {
     }
 
     @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         try {
             recipesService.deleteRecipe(id);

@@ -1,5 +1,6 @@
 package recipes.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +23,7 @@ import java.util.Objects;
 @Table(name = "RECIPES")
 public class Recipe {
     @Id
+    @JsonIgnore
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -41,7 +43,6 @@ public class Recipe {
 
     @NotEmpty
     @Size(min = 1)
-    @Column(name = "directions")
     @CollectionTable(name = "DIRECTIONS", joinColumns = @JoinColumn(name = "id"))
     @ElementCollection
     private List<String> directions = new ArrayList<>();
