@@ -6,16 +6,13 @@ import org.springframework.web.server.ResponseStatusException;
 import recipes.models.Recipe;
 import recipes.service.RecipesService;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/recipe")
 public class RecipesController {
     private final RecipesService recipesService;
-
-    private final Map<Long, Recipe> repository = new HashMap<>();
-    private long id = 0;
 
     public RecipesController(RecipesService recipesService) {
         this.recipesService = recipesService;
@@ -24,23 +21,21 @@ public class RecipesController {
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Long> create(@RequestBody final Recipe recipe) {
-        repository.put(++id, recipe);
-        return Map.of("id", id);
+        recipesService.createRecipe(recipe);
+        return Map.of("id", recipesService.createRecipe(recipe).getId());
     }
 
-    @GetMapping
-    @RequestMapping("{id}")
+    @GetMapping("{id}")
     public Recipe get(@PathVariable Long id) {
-        var recipe = repository.get(id);
-        if (recipe == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
-        }
-        return recipe;
+        return recipesService.getRecipe(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found"));
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable long id) {
-        if (!recipesService.deleteRecipe(id)) {
+    public void delete(@PathVariable Long id) {
+        try {
+            recipesService.deleteRecipe(id);
+        } catch (NoSuchElementException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }

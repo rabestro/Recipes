@@ -2,10 +2,12 @@ package recipes.service;
 
 import recipes.models.Recipe;
 
+import java.util.Optional;
+
 public interface RecipesService {
-    boolean deleteRecipe(long id);
+    void deleteRecipe(Long id);
 
     Recipe createRecipe(Recipe recipe);
 
-    Recipe getRecipe(long id);
+    Optional<Recipe> getRecipe(Long id);
 }
