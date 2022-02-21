@@ -1,27 +1,44 @@
 package recipes.controllers;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import recipes.models.Recipe;
+import recipes.service.RecipesService;
+
+import javax.validation.Valid;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/recipe")
 public class RecipesController {
-    private Recipe recipe;
+    private final RecipesService recipesService;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public Recipe create(@RequestBody final Recipe recipe) {
-        return this.recipe = recipe;
+    public RecipesController(RecipesService recipesService) {
+        this.recipesService = recipesService;
     }
 
-    @GetMapping
-    public Recipe get() {
-        return recipe;
+    @PostMapping("/new")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, Long> create(@Valid @RequestBody final Recipe recipe) {
+        recipesService.createRecipe(recipe);
+        return Map.of("id", recipesService.createRecipe(recipe).getId());
+    }
+
+    @GetMapping("{id}")
+    public Recipe get(@PathVariable Long id) {
+        return recipesService.getRecipe(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found"));
+    }
+
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        try {
+            recipesService.deleteRecipe(id);
+        } catch (NoSuchElementException exception) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 }
