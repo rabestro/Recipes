@@ -4,10 +4,15 @@ import recipes.models.Recipe;
 
 import java.util.Optional;
 
+/**
+ * This service provides basic recipe operations.
+ */
 public interface RecipesService {
-    void deleteRecipe(Long id);
+    void delete(Long id);
 
-    Recipe createRecipe(Recipe recipe);
+    Recipe create(Recipe recipe);
 
-    Optional<Recipe> getRecipe(Long id);
+    Optional<Recipe> get(Long id);
+
+    void update(Recipe recipe);
 }

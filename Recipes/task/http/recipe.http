@@ -4,6 +4,7 @@ Content-Type: application/json
 
 {
   "name": "Warming Ginger Tea",
+  "category": "beverage",
   "description": "Ginger tea is a warming drink for cool weather, ...",
   "ingredients": [
     "1 inch ginger root, minced",
@@ -18,10 +19,35 @@ Content-Type: application/json
 }
 
 ### Find a recipe
-GET {{host}}/api/recipe/1
+GET {{host}}/api/recipe/4
+
+### Find a recipe
+GET {{host}}/api/recipe/5
 
 ### Delete a recipe
 DELETE {{host}}/api/recipe/1
 
 ###
 POST {{host}}/actuator/shutdown
+
+### Create a new recipe "Fresh Mint Tea"
+POST {{host}}/api/recipe/new
+Content-Type: application/json
+
+{
+  "name": "Fresh Mint Tea",
+  "category": "beverage",
+  "description": "Light, aromatic and refreshing beverage, ...",
+  "ingredients": [
+    "boiled water",
+    "honey",
+    "fresh mint leaves"
+  ],
+  "directions": [
+    "Boil water",
+    "Pour boiling hot water into a mug",
+    "Add fresh mint leaves",
+    "Mix and let the mint leaves seep for 3-5 minutes",
+    "Add honey and mix again"
+  ]
+}

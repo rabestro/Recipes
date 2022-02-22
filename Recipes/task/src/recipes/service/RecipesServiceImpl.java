@@ -16,18 +16,23 @@ public class RecipesServiceImpl implements RecipesService {
     }
 
     @Override
-    public void deleteRecipe(Long id) {
+    public void delete(Long id) {
         var recipe = recipesRepository.findById(id).orElseThrow(NoSuchElementException::new);
         recipesRepository.delete(recipe);
     }
 
     @Override
-    public Recipe createRecipe(Recipe recipe) {
+    public Recipe create(Recipe recipe) {
         return recipesRepository.saveAndFlush(recipe);
     }
 
     @Override
-    public Optional<Recipe> getRecipe(Long id) {
+    public Optional<Recipe> get(Long id) {
         return recipesRepository.findById(id);
+    }
+
+    @Override
+    public void update(Recipe recipe) {
+        recipesRepository.save(recipe);
     }
 }

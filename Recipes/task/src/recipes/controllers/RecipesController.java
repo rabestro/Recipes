@@ -22,13 +22,13 @@ public class RecipesController {
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Long> create(@Valid @RequestBody final Recipe recipe) {
-        recipesService.createRecipe(recipe);
-        return Map.of("id", recipesService.createRecipe(recipe).getId());
+        recipesService.create(recipe);
+        return Map.of("id", recipesService.create(recipe).getId());
     }
 
     @GetMapping("{id}")
     public Recipe get(@PathVariable Long id) {
-        return recipesService.getRecipe(id)
+        return recipesService.get(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found"));
     }
 
@@ -36,7 +36,7 @@ public class RecipesController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         try {
-            recipesService.deleteRecipe(id);
+            recipesService.delete(id);
         } catch (NoSuchElementException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
