@@ -7,6 +7,8 @@ import recipes.models.Recipe;
 import recipes.service.RecipesService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -51,5 +53,19 @@ public class RecipesController {
         } catch (NoSuchElementException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("search")
+    public List<Recipe> search(
+            @RequestParam(required = false) @NotBlank String category,
+            @RequestParam(required = false) @NotBlank String name
+    ) {
+        if (category == null ^ name == null) {
+            return name == null
+                    ? recipesService.findByCategory(category)
+                    : recipesService.findByName(name);
+        }
+
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Exactly one search parameter must be specified");
     }
 }

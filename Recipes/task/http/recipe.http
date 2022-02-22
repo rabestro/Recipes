@@ -74,3 +74,6 @@ DELETE {{host}}/api/recipe/4
 ###
 POST {{host}}/actuator/shutdown
 
+### Search by category
+GET {{host}}/api/recipe/search/?category=dessert
+
