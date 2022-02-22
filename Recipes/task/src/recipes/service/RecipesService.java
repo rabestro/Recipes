@@ -2,12 +2,22 @@ package recipes.service;
 
 import recipes.models.Recipe;
 
+import java.util.List;
 import java.util.Optional;
 
+/**
+ * This service provides basic recipe operations.
+ */
 public interface RecipesService {
-    void deleteRecipe(Long id);
+    void delete(Long id);
 
-    Recipe createRecipe(Recipe recipe);
+    Recipe create(Recipe recipe);
 
-    Optional<Recipe> getRecipe(Long id);
+    Optional<Recipe> get(Long id);
+
+    void update(Recipe recipe);
+
+    List<Recipe> findByName(String name);
+
+    List<Recipe> findByCategory(String category);
 }
