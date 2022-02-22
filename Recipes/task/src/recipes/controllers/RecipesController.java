@@ -26,6 +26,17 @@ public class RecipesController {
         return Map.of("id", recipesService.create(recipe).getId());
     }
 
+    @PutMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@Valid @RequestBody final Recipe recipe, @PathVariable Long id) {
+        recipe.setId(id);
+        try {
+            recipesService.update(recipe);
+        } catch (NoSuchElementException exception) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("{id}")
     public Recipe get(@PathVariable Long id) {
         return recipesService.get(id)

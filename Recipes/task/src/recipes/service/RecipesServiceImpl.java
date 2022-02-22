@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import recipes.models.Recipe;
 import recipes.repositories.RecipesRepository;
 
+import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -23,6 +24,7 @@ public class RecipesServiceImpl implements RecipesService {
 
     @Override
     public Recipe create(Recipe recipe) {
+        recipe.setDate(LocalDateTime.now());
         return recipesRepository.saveAndFlush(recipe);
     }
 
@@ -33,6 +35,8 @@ public class RecipesServiceImpl implements RecipesService {
 
     @Override
     public void update(Recipe recipe) {
+        recipesRepository.findById(recipe.getId()).orElseThrow(NoSuchElementException::new);
+        recipe.setDate(LocalDateTime.now());
         recipesRepository.save(recipe);
     }
 }
