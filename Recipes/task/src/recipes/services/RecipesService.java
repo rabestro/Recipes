@@ -1,4 +1,4 @@
-package recipes.service;
+package recipes.services;
 
 import recipes.models.Recipe;
 

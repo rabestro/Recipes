@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import recipes.models.Recipe;
-import recipes.service.RecipesService;
+import recipes.services.RecipesService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;

@@ -1,4 +1,4 @@
-package recipes.service;
+package recipes.services;
 
 import org.springframework.stereotype.Service;
 import recipes.models.Recipe;
