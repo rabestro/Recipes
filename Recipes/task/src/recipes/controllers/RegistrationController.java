@@ -1,10 +1,12 @@
 package recipes.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import recipes.models.User;
 import recipes.repositories.UserRepository;
 
@@ -21,9 +23,17 @@ public record RegistrationController(UserRepository repository, PasswordEncoder 
         // input validation omitted for brevity
         LOG.log(INFO, "Register user: {0}", user.getEmail());
 
+        if (isExistUser(user)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "the user already registered.");
+        }
+
         user.setPassword(encoder.encode(user.getPassword()));
 
         repository.save(user);
+    }
+
+    private boolean isExistUser(User user) {
+        return !repository.findByEmail(user.getEmail()).isEmpty();
     }
 
     @GetMapping("/users")
