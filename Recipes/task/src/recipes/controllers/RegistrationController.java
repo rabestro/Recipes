@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import recipes.models.User;
 import recipes.repositories.UserRepository;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static java.lang.System.Logger.Level.INFO;
@@ -19,7 +20,7 @@ public record RegistrationController(UserRepository repository, PasswordEncoder 
     private static final System.Logger LOG = System.getLogger(RegistrationController.class.getName());
 
     @PostMapping("/api/register")
-    public void register(@RequestBody User user) {
+    public void register(@RequestBody @Valid User user) {
         // input validation omitted for brevity
         LOG.log(INFO, "Register user: {0}", user.getEmail());
 

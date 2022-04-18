@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Set;
@@ -33,6 +34,7 @@ public class User implements UserDetails {
     private Long id;
 
     @Email
+    @Pattern(regexp = ".+[.].+")
     private String email;
 
     @Size(min = 8)
