@@ -1,0 +1,61 @@
+### Example 1: POST /api/recipe/new request without authentication
+
+POST {{host}}/api/recipe/new
+Content-Type: application/json
+
+{
+  "name": "Fresh Mint Tea",
+  "category": "beverage",
+  "description": "Light, aromatic and refreshing beverage, ...",
+  "ingredients": [
+    "boiled water",
+    "honey",
+    "fresh mint leaves"
+  ],
+  "directions": [
+    "Boil water",
+    "Pour boiling hot water into a mug",
+    "Add fresh mint leaves",
+    "Mix and let the mint leaves seep for 3-5 minutes",
+    "Add honey and mix again"
+  ]
+}
+
+### Example 2: POST /api/register request without authentication
+
+POST {{host}}/api/register
+Content-Type: application/json
+
+{
+  "email": "Cook_Programmer@somewhere.com",
+  "password": "RecipeInBinary"
+}
+
+### Example 3: request with basic authentication
+
+POST {{host}}/api/recipe/new
+Authorization: Basic Cook_Programmer@somewhere.com RecipeInBinary
+Content-Type: application/json
+
+{
+  "name": "Mint Tea",
+  "category": "beverage",
+  "description": "Light, aromatic and refreshing beverage, ...",
+  "ingredients": [
+    "boiled water",
+    "honey",
+    "fresh mint leaves"
+  ],
+  "directions": [
+    "Boil water",
+    "Pour boiling hot water into a mug",
+    "Add fresh mint leaves",
+    "Mix and let the mint leaves seep for 3-5 minutes",
+    "Add honey and mix again"
+  ]
+}
+
+### Example 4: request with basic authentication
+
+GET {{host}}/api/recipe/1
+Authorization: Basic Cook_Programmer@somewhere.com RecipeInBinary

@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import recipes.validator.ExtendedEmailValidator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,9 +17,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -33,16 +37,16 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Email
-    @Pattern(regexp = ".+[.].+")
+    @ExtendedEmailValidator
     private String email;
 
+    @NotBlank
     @Size(min = 8)
     private String password;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Set.of();
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override

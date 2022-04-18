@@ -6,3 +6,14 @@ Content-Type: application/json
   "email": "Cook_Programmer@somewhere.com",
   "password": "RecipeInBinary"
 }
+
+### POST /api/register request without authentication
+
+POST {{host}}/api/register
+Content-Type: application/json
+
+{
+  "email": "a@b.c",
+  "password": "12345678"
+}
+

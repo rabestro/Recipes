@@ -21,7 +21,6 @@ public record RegistrationController(UserRepository repository, PasswordEncoder 
 
     @PostMapping("/api/register")
     public void register(@RequestBody @Valid User user) {
-        // input validation omitted for brevity
         LOG.log(INFO, "Register user: {0}", user.getEmail());
 
         if (isExistUser(user)) {

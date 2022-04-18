@@ -1,6 +1,8 @@
 package recipes.controllers;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import recipes.models.Recipe;
@@ -23,7 +25,10 @@ public class RecipesController {
 
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.OK)
-    public Map<String, Long> create(@Valid @RequestBody final Recipe recipe) {
+    public Map<String, Long> create(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody final Recipe recipe
+    ) {
         recipesService.create(recipe);
         return Map.of("id", recipesService.create(recipe).getId());
     }

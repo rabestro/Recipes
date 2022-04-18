@@ -18,15 +18,15 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .mvcMatchers("/api/register").permitAll()
+                .and()
+                .authorizeRequests()
+                .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic()
                 .and()
-                .formLogin()
-                .and()
-                .logout();
-
-        http.csrf().disable();
+                .csrf().disable()
+                .headers().frameOptions().disable();
     }
 
     @Override
