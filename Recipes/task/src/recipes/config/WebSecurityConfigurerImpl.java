@@ -18,6 +18,7 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .mvcMatchers("/api/register").permitAll()
+                .antMatchers("/actuator/**").permitAll()
                 .and()
                 .authorizeRequests()
                 .antMatchers("/h2-console/**").permitAll()
@@ -32,7 +33,7 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .userDetailsService(userDetailsService)
+                .userDetailsService(getUserDetailsService())
                 .passwordEncoder(getEncoder());
 
         auth

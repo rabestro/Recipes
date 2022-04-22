@@ -54,8 +54,8 @@ public class Recipe {
 
     @NotEmpty
     @Size(min = 1)
-    @CollectionTable(name = "DIRECTIONS", joinColumns = @JoinColumn(name = "id"))
     @ElementCollection
+    @CollectionTable(name = "DIRECTIONS", joinColumns = @JoinColumn(name = "id"))
     private List<String> directions = new ArrayList<>();
 
     @Override

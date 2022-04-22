@@ -44,20 +44,23 @@ public class RecipesController {
     public void update(@AuthenticationPrincipal final UserDetails userDetails,
                        @RequestBody @Valid final Recipe recipe,
                        @PathVariable final Long id) {
-        var isAuthor = recipesService.get(id)
-                .map(Recipe::getUser)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
-                .equals(userDetails.getUsername());
-
-        if (!isAuthor) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-
+        checkUserRights(userDetails, id);
         recipe.setId(id);
         try {
             recipesService.update(recipe);
         } catch (NoSuchElementException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    private void checkUserRights(UserDetails userDetails, Long recipeId) {
+        var isUserAuthor = recipesService.get(recipeId)
+                .map(Recipe::getUser)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
+                .equals(userDetails.getUsername());
+
+        if (!isUserAuthor) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
     }
 
@@ -70,11 +73,13 @@ public class RecipesController {
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long id) {
-        try {
-            recipesService.delete(id);
-        } catch (NoSuchElementException exception) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+        checkUserRights(userDetails, id);
+        recipesService.delete(id);
+//        try {
+//            recipesService.delete(id);
+//        } catch (NoSuchElementException exception) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//        }
     }
 
     @GetMapping("search")
