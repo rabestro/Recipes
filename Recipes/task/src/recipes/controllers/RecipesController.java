@@ -14,9 +14,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import static java.lang.System.Logger.Level.DEBUG;
+
 @RestController
 @RequestMapping("/api/recipe")
 public class RecipesController {
+    private static final System.Logger LOG = System.getLogger(RecipesController.class.getName());
+
     private final RecipesService recipesService;
 
     public RecipesController(RecipesService recipesService) {
@@ -29,13 +33,26 @@ public class RecipesController {
             @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody final Recipe recipe
     ) {
+        LOG.log(DEBUG, userDetails);
+        recipe.setUser(userDetails.getUsername());
         recipesService.create(recipe);
         return Map.of("id", recipesService.create(recipe).getId());
     }
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody final Recipe recipe, @PathVariable Long id) {
+    public void update(@AuthenticationPrincipal final UserDetails userDetails,
+                       @RequestBody @Valid final Recipe recipe,
+                       @PathVariable final Long id) {
+        var isAuthor = recipesService.get(id)
+                .map(Recipe::getUser)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
+                .equals(userDetails.getUsername());
+
+        if (!isAuthor) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
         recipe.setId(id);
         try {
             recipesService.update(recipe);
@@ -52,7 +69,7 @@ public class RecipesController {
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    public void delete(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long id) {
         try {
             recipesService.delete(id);
         } catch (NoSuchElementException exception) {

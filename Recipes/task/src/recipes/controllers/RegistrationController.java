@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.WARNING;
 
 @RestController
 public record RegistrationController(UserRepository repository, PasswordEncoder encoder) {
@@ -24,6 +25,7 @@ public record RegistrationController(UserRepository repository, PasswordEncoder 
         LOG.log(INFO, "Register user: {0}", user.getEmail());
 
         if (isExistUser(user)) {
+            LOG.log(WARNING, "the user {0} already registered.", user.getEmail());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "the user already registered.");
         }
 

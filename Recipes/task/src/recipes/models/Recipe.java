@@ -30,6 +30,9 @@ public class Recipe {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @JsonIgnore
+    private String user;
+
     @NotBlank
     private String name;
 

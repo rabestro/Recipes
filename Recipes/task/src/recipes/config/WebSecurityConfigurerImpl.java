@@ -35,6 +35,22 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
                 .userDetailsService(userDetailsService)
                 .passwordEncoder(getEncoder());
 
+        auth
+                .inMemoryAuthentication()
+                .withUser("user1")
+                .password(getEncoder().encode("pass1"))
+                .roles()
+                .and()
+                .withUser("user2")
+                .password(getEncoder().encode("pass2"))
+                .roles("USER")
+                .and()
+                .withUser("user3")
+                .password(getEncoder().encode("pass3"))
+                .roles("ADMIN")
+                .and()
+                .passwordEncoder(getEncoder());
+
     }
 
     @Bean
