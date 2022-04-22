@@ -12,9 +12,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.INFO;
 
 @RestController
 @RequestMapping("/api/recipe")
@@ -46,20 +46,18 @@ public class RecipesController {
                        @PathVariable final Long id) {
         checkUserRights(userDetails, id);
         recipe.setId(id);
-        try {
-            recipesService.update(recipe);
-        } catch (NoSuchElementException exception) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+        recipesService.update(recipe);
     }
 
     private void checkUserRights(UserDetails userDetails, Long recipeId) {
-        var isUserAuthor = recipesService.get(recipeId)
-                .map(Recipe::getUser)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
-                .equals(userDetails.getUsername());
+        var recipe = recipesService.get(recipeId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        if (!isUserAuthor) {
+        LOG.log(INFO, "Check rights. User: {0} Recipe: {1}", userDetails.getUsername(), recipe.getUser());
+
+        var hasRights = recipe.getUser() == null || userDetails.getUsername().equals(recipe.getUser());
+
+        if (!hasRights) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
     }
@@ -75,11 +73,6 @@ public class RecipesController {
     public void delete(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long id) {
         checkUserRights(userDetails, id);
         recipesService.delete(id);
-//        try {
-//            recipesService.delete(id);
-//        } catch (NoSuchElementException exception) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-//        }
     }
 
     @GetMapping("search")
