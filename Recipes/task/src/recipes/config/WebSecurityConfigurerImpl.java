@@ -18,10 +18,9 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .mvcMatchers("/api/register").permitAll()
-                .antMatchers("/actuator/**").permitAll()
+                .antMatchers("/h2-console/**", "/actuator/**").permitAll()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic()
